@@ -31,7 +31,7 @@ public class ShortUrlServiceImpl implements IShortUrlService {
 
     @Override
     public String getLongUrl(String id) {
-ShortUrl shortUrl=shortUrlRepository.findByCustomId(id).orElseThrow(()->new Error("not found"));
+       ShortUrl shortUrl=shortUrlRepository.findByCustomId(id).orElseThrow(()->new Error("not found"));
         return shortUrl.getLongUrl();
     }
 
