@@ -9,14 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-public class ShortUrlController {
+public class            ShortUrlController {
     private final IShortUrlService shortUrlService;
 //    create shorturl
     @PostMapping
@@ -24,5 +22,18 @@ public class ShortUrlController {
         ShortUrl shortUrl=shortUrlService.generateShortUrl(generateShortUrlDTO);
         return new ResponseEntity<ShortUrl>(shortUrl, HttpStatus.CREATED);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<String> redirectToLongUrl(@PathVariable String id){
+        String response=shortUrlService.getLongUrl(id);
+        log.info("Request with customId {} is redirected to long url {}",id,response);
+        return new ResponseEntity<String>(response,HttpStatus.OK);
+    }
 //    delete url
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteShortUrl(String id){
+        shortUrlService.deleteShortUrl(id);
+        log.info("ShortUrl with customId {} is successfully deleted",id);
+        return new ResponseEntity<>("shorturl removed successfully",HttpStatus.OK);
+    }
+
 }

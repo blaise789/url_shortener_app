@@ -23,6 +23,7 @@ public class ShortUrlServiceImpl implements IShortUrlService {
 // check if the short url already exists
         if(this.shortUrlRepository.existsByCustomId(dto.getCustomId())){
             log.info(" creating  the  shorturl  with customIdId  {} and longUrl {} failed ",shortUrl.getCustomId(),shortUrl.getLongUrl());
+
         }
         shortUrlRepository.save(shortUrl);
         return shortUrl;
@@ -30,11 +31,15 @@ public class ShortUrlServiceImpl implements IShortUrlService {
 
     @Override
     public String getLongUrl(String id) {
-        return "";
+ShortUrl shortUrl=shortUrlRepository.findByCustomId(id).orElseThrow(()->new Error("not found"));
+        return shortUrl.getLongUrl();
     }
 
     @Override
     public void deleteShortUrl(String id) {
+ShortUrl entity=this.shortUrlRepository.findByCustomId(id).orElseThrow();
+this.shortUrlRepository.delete(entity);
+log.info("Short url with customId {} is successfully deleted",id);
 
     }
 
