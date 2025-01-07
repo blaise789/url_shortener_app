@@ -21,5 +21,5 @@ public class ShortUrl {
     private  String customId;
     private String longUrl;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime expiryTime;
+    private LocalDateTime expireTime;
 }

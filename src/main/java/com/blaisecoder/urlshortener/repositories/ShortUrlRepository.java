@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface ShortUrlRepository extends JpaRepository<ShortUrl,String> {
     public boolean existsByCustomId( String customId);
     public Optional<ShortUrl> findByCustomId(String customId);
-//    public List<ShortUrl> findAllByExpireTime(LocalDateTime time);
+    public List<ShortUrl> findAllByExpireTimeBefore(LocalDateTime time);
 }
 
