@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ShortUrlRepository extends JpaRepository<ShortUrl,String> {
-    public boolean existsByCustomId();
+    public boolean existsByCustomId( String customId);
 }

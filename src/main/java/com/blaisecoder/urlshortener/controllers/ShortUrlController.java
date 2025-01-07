@@ -20,7 +20,7 @@ public class ShortUrlController {
     private final IShortUrlService shortUrlService;
 //    create shorturl
     @PostMapping
-    public ResponseEntity<ShortUrl> createShortUrl(@RequestBody()GenerateShortUrlDTO generateShortUrlDTO){
+    public ResponseEntity<ShortUrl> createShortUrl(@RequestBody() GenerateShortUrlDTO generateShortUrlDTO){
         ShortUrl shortUrl=shortUrlService.generateShortUrl(generateShortUrlDTO);
         return new ResponseEntity<ShortUrl>(shortUrl, HttpStatus.CREATED);
     }
