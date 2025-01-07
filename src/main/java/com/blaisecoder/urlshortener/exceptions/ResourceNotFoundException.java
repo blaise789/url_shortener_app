@@ -14,6 +14,7 @@ public class ResourceNotFoundException extends  Exception {
 private  String message="exceptions.notFound";
 private  final Date timestamp;
 private Object[] args;
+
 public ResourceNotFoundException(Object ...args){
     this.args=args;
     this.timestamp=new Date();

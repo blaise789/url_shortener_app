@@ -1,5 +1,6 @@
 package com.blaisecoder.urlshortener.controllers;
 
+import com.blaisecoder.urlshortener.exceptions.ResourceNotFoundException;
 import com.blaisecoder.urlshortener.models.ShortUrl;
 import com.blaisecoder.urlshortener.models.domains.ApiResponse;
 import com.blaisecoder.urlshortener.models.dtos.GenerateShortUrlDTO;
@@ -28,7 +29,7 @@ public class            ShortUrlController {
         return new ResponseEntity<ShortUrl>(shortUrl, HttpStatus.CREATED);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<String>> redirectToLongUrl(@PathVariable String id){
+    public ResponseEntity<ApiResponse<String>> redirectToLongUrl(@PathVariable String id) throws ResourceNotFoundException {
         String response=shortUrlService.getLongUrl(id);
         log.info("Request with customId {} is redirected to long url {}",id,response);
         return new ApiResponse<>(response,messageSource.getMessage("responses.getEntitySuccess",null,LocaleContextHolder.getLocale()),HttpStatus.OK).toResponseEntity();

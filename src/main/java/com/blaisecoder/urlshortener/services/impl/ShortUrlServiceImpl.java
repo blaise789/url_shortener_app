@@ -1,5 +1,6 @@
 package com.blaisecoder.urlshortener.services.impl;
 
+import com.blaisecoder.urlshortener.exceptions.ResourceNotFoundException;
 import com.blaisecoder.urlshortener.models.ShortUrl;
 import com.blaisecoder.urlshortener.models.dtos.GenerateShortUrlDTO;
 import com.blaisecoder.urlshortener.repositories.ShortUrlRepository;
@@ -30,9 +31,10 @@ public class ShortUrlServiceImpl implements IShortUrlService {
     }
 
     @Override
-    public String getLongUrl(String id) {
-       ShortUrl shortUrl=shortUrlRepository.findByCustomId(id).orElseThrow(()->new Error("not found"));
+    public String getLongUrl(String id) throws ResourceNotFoundException {
+       ShortUrl shortUrl=shortUrlRepository.findByCustomId(id).orElseThrow(()->new ResourceNotFoundException("ShortUrl","customId",id));
         return shortUrl.getLongUrl();
+
     }
 
     @Override
