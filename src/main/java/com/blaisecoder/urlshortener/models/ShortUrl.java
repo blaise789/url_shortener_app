@@ -20,6 +20,8 @@ public class ShortUrl {
     @Column(unique = true)
     private  String customId;
     private String longUrl;
+    private String shortUrl;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expireTime;
+
 }

@@ -32,7 +32,9 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(DuplicateRecordException.class)
     public ResponseEntity<?> duplicatedRecordException(DuplicateRecordException ex, Locale locale){
-        String errorMessage=messageSource.getMessage(ex.getMessage(ex.getMessage(),ex.getArgs(),locale));
+        String errorMessage=messageSource.getMessage(ex.getMessage(),ex.getArgs(),locale);
+        return new ApiResponse<>(null,errorMessage,HttpStatus.BAD_GATEWAY).toResponseEntity();
+
 
     }
 

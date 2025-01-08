@@ -1,10 +1,12 @@
 package com.blaisecoder.urlshortener.services.impl;
 
+import com.blaisecoder.urlshortener.exceptions.DuplicateRecordException;
 import com.blaisecoder.urlshortener.exceptions.ResourceNotFoundException;
 import com.blaisecoder.urlshortener.models.ShortUrl;
 import com.blaisecoder.urlshortener.models.dtos.GenerateShortUrlDTO;
 import com.blaisecoder.urlshortener.repositories.ShortUrlRepository;
 import com.blaisecoder.urlshortener.services.IShortUrlService;
+import com.blaisecoder.urlshortener.utils.RandomStringGenerator;
 import com.blaisecoder.urlshortener.utils.ShortUrlMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,21 +15,47 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ShortUrlServiceImpl implements IShortUrlService {
     //    shorturl repository
-   @Autowired
-    private  ShortUrlRepository shortUrlRepository;
+
+    private  final ShortUrlRepository shortUrlRepository;
+   private  final RandomStringGenerator randomStringGenerator;
 
     @Override
-    public ShortUrl generateShortUrl(GenerateShortUrlDTO dto) {
-        ShortUrl shortUrl= ShortUrlMapper.toEntity(dto);
+    public ShortUrl generateShortUrl(GenerateShortUrlDTO dto) throws DuplicateRecordException {
+        ShortUrl url= ShortUrlMapper.toEntity(dto);
+        String shortUrl=randomStringGenerator.generateShortUrl();
+        url.setShortUrl(shortUrl);
 // check if the short url already exists
         if(this.shortUrlRepository.existsByCustomId(dto.getCustomId())){
-            log.info(" creating  the  shorturl  with customIdId  {} and longUrl {} failed ",shortUrl.getCustomId(),shortUrl.getLongUrl());
+            log.info(" creating  the  shorturl  with customIdId  {} and longUrl {} failed ",url.getCustomId(),url.getLongUrl());
+            throw new DuplicateRecordException("ShortUrl","customId",dto.getCustomId());
 
         }
-        shortUrlRepository.save(shortUrl);
-        return shortUrl;
+
+        if(dto.getCustomId()==null || dto.getCustomId().equalsIgnoreCase("")){
+            generateCustomId(url);
+        }
+
+        shortUrlRepository.save(url);
+        return url;
+    }
+
+    private void generateCustomId(ShortUrl url) {
+
+        boolean uniqueId=false;
+        while (!uniqueId) {
+            String customId = randomStringGenerator.generateRandomAlphanumericString(8);
+            if (!shortUrlRepository.existsByCustomId(customId)) {
+                url.setCustomId(customId);
+                uniqueId=true;
+
+
+//            if the customId Is not unique then it repeat itself again and again
+            }
+        }
+
     }
 
     @Override

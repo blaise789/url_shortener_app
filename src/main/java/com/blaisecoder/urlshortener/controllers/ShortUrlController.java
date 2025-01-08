@@ -1,5 +1,6 @@
 package com.blaisecoder.urlshortener.controllers;
 
+import com.blaisecoder.urlshortener.exceptions.DuplicateRecordException;
 import com.blaisecoder.urlshortener.exceptions.ResourceNotFoundException;
 import com.blaisecoder.urlshortener.models.ShortUrl;
 import com.blaisecoder.urlshortener.models.domains.ApiResponse;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/v1/url_shortener")
 @Slf4j
 @RequiredArgsConstructor
 public class            ShortUrlController {
@@ -24,9 +26,9 @@ public class            ShortUrlController {
     private final MessageSource messageSource;
 //    create shorturl
     @PostMapping
-    public ResponseEntity<ShortUrl> createShortUrl(@RequestBody() GenerateShortUrlDTO generateShortUrlDTO){
+    public ResponseEntity<ShortUrl> createShortUrl(@RequestBody() GenerateShortUrlDTO generateShortUrlDTO) throws DuplicateRecordException {
         ShortUrl shortUrl=shortUrlService.generateShortUrl(generateShortUrlDTO);
-        return new ResponseEntity<ShortUrl>(shortUrl, HttpStatus.CREATED);
+        return new ResponseEntity<>(shortUrl, HttpStatus.CREATED);
     }
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<String>> redirectToLongUrl(@PathVariable String id) throws ResourceNotFoundException {
